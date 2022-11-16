@@ -82,7 +82,7 @@ covarian = multiply_matrix((hasil_selisih[0]), transpose_matrix(hasil_selisih[0]
 print(len(covarian[0]))
     
     
-    
+
 cv2.destroyAllWindows()
 cv2.waitKey(0)
 cv2.destroyAllWindows()
