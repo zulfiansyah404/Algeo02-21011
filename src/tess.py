@@ -3,6 +3,20 @@ import os
 import numpy as np
 import time
 
+def getNormMat(matrix):
+    sum = 0
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            sum+= matrix[i][j]**2
+    return sum**0.5
+
+def getNormVec(array):
+    sum = 0
+    for i in range(len(array)):
+        sum += array[i] ** 2
+
+    return sum ** 0.5
+
 def add_matrix(matrix1, matrix2):
     return np.add(matrix1, matrix2)
 
@@ -57,7 +71,7 @@ def getQR(A):
     R = np.zeros((m, n))
     for j in range(n):
         v = A[:, j]
-        norm = np.linalg.norm(v)
+        norm = getNormVec(v)
         for i in range(j):
             temp = A[:, j] 
             q = Q[:, i]
@@ -70,7 +84,7 @@ def getQR(A):
             R[j][j] = norm
             Q[:, j] = np.divide(v, norm)
         else :
-            norm = np.linalg.norm(v)
+            norm = getNormVec(v)
             R[j][j] = round(norm, 6)
             v = np.divide(v, norm)
             Q[:, j] = v
@@ -98,14 +112,8 @@ def getEigenVal(matrix,listt):
                 break
     return listt
 
-def getNormMat(matrix):
-    listt = createzero(len(matrix))
-    sum = 0
-    for i in range(len(matrix)):
-        for j in range(len(matrix[0])):
-            sum+= matrix[i][j]**2
-    return sum**0.5
-    
+
+
     
 
 
@@ -302,7 +310,7 @@ for vector in range(len(eigen_vector_list)):
     # temp_min = []
     for i in range(len(eigenface[vector])):
         temp = subtract_matrix(newtst, eigenface[vector][i])
-        temp = np.linalg.norm(temp)
+        temp = getNormMat(temp)
         euiclidian.append(temp)
         # temp_min.append(temp)
         if i == 0:
