@@ -150,24 +150,29 @@ def getNormMat(matrix):
 
 # path = 'dataset/pins_Zendaya'
 start = time.time()
-newIMG = cv2.imread('dataset\pins_gal gadot\gal gadot10_1660.jpg', 0)
+newIMG = cv2.imread('adrianalima.jpg', 0)
 newIMG = cv2.resize(newIMG, (256,256), interpolation = cv2.INTER_AREA)
 
 count = 0
 dataset = []
+imagee = []
 list_subfolders_with_paths = [f.path for f in os.scandir('dataset') if f.is_dir()]
 for j in (list_subfolders_with_paths):
     listt = []
+    temp_img = []
     print(j)
     for i in os.listdir(j):
         image = cv2.imread(j+'/'+str(i), 0)
+        img2 = cv2.imread(j+'/'+str(i))
         resized = cv2.resize(image, (256,256), interpolation = cv2.INTER_AREA)
         listt.append(resized)
+        temp_img.append(img2)
     count += 1
+    imagee.append(temp_img)
     dataset.append(listt)
     # if j == "dataset\pins_Katherine Langford":
     #     break
-    if count == 40:
+    if count == 4:
         break
 # dataset = np.array(dataset)
     
@@ -182,7 +187,7 @@ mean_list = []
 for data in range(len(dataset)):
     print(data + 1)     
     matrix = avg_matrix(dataset[data])
-    matrix = matrix.astype(np.uint8)
+    # matrix = matrix.astype(np.uint8)
     mean_list.append(matrix)
     # displayMat(matrix)
     # cv2.imshow('avg image',matrix)
@@ -326,7 +331,7 @@ for i in range(len(list_min)):
         idx_min = i
        
 # index = hasil_euclidian.index(minn)
-img = dataset[idx_min][final_min[1]]
+img = imagee[idx_min][final_min[1]]
 
 
 print(time.time()-start)
