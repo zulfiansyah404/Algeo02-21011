@@ -1,5 +1,7 @@
 import cv2
 import os
+from cv2 import CAP_PROP_FRAME_HEIGHT
+from cv2 import CAP_PROP_FRAME_WIDTH
 import numpy as np
 import time
 
@@ -105,52 +107,48 @@ def getNormMat(matrix):
         for j in range(len(matrix[0])):
             sum+= matrix[i][j]**2
     return sum**0.5
+
     
+cam = cv2.VideoCapture(0)
+# cam.set(CAP_PROP_FRAME_WIDTH, 256); 
+# cam.set(CAP_PROP_FRAME_HEIGHT, 256); 
+
+cv2.namedWindow("test")
+
+img_counter = 0
+
+while True:
+    ret, frame = cam.read()
+    if not ret:
+        print("failed to grab frame")
+        break
+    cv2.imshow("test", frame)
+
+    k = cv2.waitKey(1)
+    if k%256 == 27:
+        # ESC pressed
+        print("Escape hit, closing...")
+        break
+    elif k%256 == 32:
+        # SPACE pressed
+        img_name = "camera{}.png".format(img_counter)
+        cv2.imwrite(img_name, frame)
+        print("{} written!".format(img_name))
+        img_counter += 1
+        newIMG = cv2.imread(img_name, 0)
+        newIMG = newIMG[70:410, 110:520]
+        newIMG = cv2.resize(newIMG, (256,256), interpolation = cv2.INTER_AREA)
+        newIMGG = cv2.imread(img_name)
+        newIMGG = newIMGG[70:410, 110:520]
+        newIMGG = cv2.resize(newIMGG, (256,256), interpolation = cv2.INTER_AREA)
+        
+
+cam.release()
+cv2.destroyAllWindows()    
     
 
 
-# m1 = [[2,0,1],[1,2,0],[0,2,4]]
-# m2 = [[1,1,1],[0,1,0],[1,2,2]]
-# data = [[m1,m2]]
-# print(len(data))
-# print(len(data[0]))
-# print(len(data[0][0]))
-
-
-# mean = avg_matrix(data)
-# displayMat(mean)
-
-# hasil_selisih = []
-# hasil_selisih = nilai_tengah(mean,hasil_selisih,data)
-
-# for i in range(len(hasil_selisih)):
-#     print("\n")
-#     displayMat(hasil_selisih[i])
-    
-# temp = hasil_selisih[0]
-# for i in range(len(hasil_selisih) - 1):
-#     temp = merge_matrix(temp, hasil_selisih[i+1])
-
-# print(temp)
-# print("\n")
-
-# cov = np.cov(temp)
-# displayMat(cov)
-
-
-# mat = [[1, 0, 0], [1, 1, 0], [0, 0, 1]]
-# matt = [[0, 1, 0] ,[0, 0, 0], [ 1, 0, 1]]
-# mattt = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-
-# x = merge_matrix(m,mat)
-# # x = merge_matrix(mat, matt)
-# # x = merge_matrix(x, mattt)
-# print((x))
-
-# path = 'dataset/pins_Zendaya'
 start = time.time()
-newIMG = cv2.imread('avril.jpg', 0)
-newIMG = cv2.resize(newIMG, (256,256), interpolation = cv2.INTER_AREA)
 
 count = 0
 dataset = []
@@ -171,15 +169,9 @@ for j in (list_subfolders_with_paths):
     imagee.append(temp_img)
     dataset.append(listt)
     nama_folder.append(j)
-    # if j == "dataset\pins_Katherine Langford":
-    #     break
     if count == 12:
         break
-# dataset = np.array(dataset)
-    
-# print(len(dataset[0]))
 
-# print(dataset[0][0])
 #rata-rata
 eigenface = []
 eigen_vector_list = []
@@ -188,105 +180,28 @@ mean_list = []
 for data in range(len(dataset)):
     print(data + 1)     
     matrix = avg_matrix(dataset[data])
-    # matrix = matrix.astype(np.uint8)
     mean_list.append(matrix)
-    # displayMat(matrix)
-    # cv2.imshow('avg image',matrix)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
 
-
-#cari nilai tengah
     hasil_selisih = []
     hasil_selisih = nilai_tengah(matrix,hasil_selisih,dataset[data])
-# cv2.imshow("dddd",hasil_selisih[67])
-    # cv2.imshow('selisih',hasil_selisih[5])
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
 
-# for i in range(len(hasil_selisih)):
-#     print(hasil_selisih[i])
-
-    # print("====================================")
     temp = hasil_selisih[0]
     # temp = createzero(256)
     for i in range(1, len(hasil_selisih)):
         temp = merge_matrix(temp, hasil_selisih[i])
-    # print("==================================")
-    # cv2.imshow('Original image',temp)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-    
 
-
-# # # temp = [[1,0,0,0,1,0],[1,1,0,0,0,0],[0,0,1,1,0,1]]
-
-# # #cari kovarian
-##covarian = get_covarian(hasil_selisih)
-# # # print(covarian)
-# # print("==================================")
-# temp = (np.cov(temp))
     covarian = np.matmul(temp, np.transpose(temp))
 
-# cv2.imshow('Original image',covarian)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
-# print(len(covarian))
-# print(len(covarian[0]))
-
-
-# print(len(covarian[0]))
-
     eigen = (getEigenValues(covarian))
-# # print(eigen[0])
-# print("\n")
-# eigenVal =[]
-# eigenVal = getEigenVal(eigen[0],eigenVal)  
-
     eigen_vector = eigen[1]
-# print(eigen_vector)
-    # print("============================================================")
-    #eigen_vector = np.linalg.eig(covarian)[1]
-    # print(eigen_vector)
 
-
-    # for i in range(len(eigen_vector)):
-    #     norm = np.linalg.norm(eigen_vector[:,i])
-    #     temp = (1/norm)*eigen_vector[:,i]
-    #     listt.append(temp)
     listt =[]
     for i in range(len(hasil_selisih)):
-        # temp = []
         temp3 = multiply_matrix(eigen_vector, hasil_selisih[i])
-        # cv2.imshow('Original image'+str(i),temp3)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
         listt.append(temp3)
         
     eigenface.append(listt)
     eigen_vector_list.append(eigen_vector)
-
-# print((hasil_selisih[0]))
-
-
-
-
-# displayMat(listt)
-# print(listt[:,0])
-# print(len(listt))
-# print(len(listt[0]))
-# print(len(listt[0][0]))
-# for i in range(5):
-#     cv2.imshow('Original image'+str(i),listt[i])
-
-# cv2.waitKey(0)    
-# cv2.destroyAllWindows()
-
-
-# newIMG = cv2.imread('gal-gadot.jpeg', 0)
-# newIMG = cv2.resize(newIMG, (256,256), interpolation = cv2.INTER_AREA)
-
-
 
 
 hasil_euclidian = []
@@ -297,33 +212,22 @@ for vector in range(len(eigen_vector_list)):
     newtst = multiply_matrix(eigen_vector_list[vector], testIMG)
     min = 0
     idx_min = 0
-    # for j in range(len(eigenface)):
     euiclidian = []
-    # temp_min = []
+    
     for i in range(len(eigenface[vector])):
         temp = subtract_matrix(newtst, eigenface[vector][i])
         temp = np.linalg.norm(temp)
         euiclidian.append(temp)
-        # temp_min.append(temp)
         if i == 0:
             min = temp
             idx_min = 0
         elif temp <= min:
             min = temp
             idx_min = i
-        # if(temp<=100):
-        #     print("ada")
-        #     print(i)
-        #     break
-        # minnnnnnnn = min(temp_min)
-        # print(temp_min)
-        # print("====================================")
+
     list_min.append((min, idx_min))
     hasil_euclidian.append(euiclidian)
- 
-# hasil_euclidian = np.array(hasil_euclidian)   
-# minn = np.unravel_index(np.argmin(hasil_euclidian, axis=None), hasil_euclidian.shape)
-# print(list_min)
+
 idx_min = 0
 final_min = list_min[0]
 for i in range(len(list_min)):
@@ -335,13 +239,13 @@ print("==============DISTANCE================")
 
 for i in range(len(list_min)):
     print(nama_folder[i], "=", list_min[i][0])
-       
-# index = hasil_euclidian.index(minn)
+
 img = imagee[idx_min][final_min[1]]
 
 
 print("Times =",time.time()-start,"seconds")
 
-cv2.imshow('Original image',img)
+cv2.imshow('Original image',newIMGG)
+cv2.imshow('Mirip dengan',img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
