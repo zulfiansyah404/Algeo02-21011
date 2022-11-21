@@ -150,7 +150,6 @@ def getNormMat(matrix):
 
 # path = 'dataset/pins_Zendaya'
 start = time.time()
-newIMG = cv2.imread('adrianalima.jpg', 0)
 newIMG = cv2.resize(newIMG, (256,256), interpolation = cv2.INTER_AREA)
 
 count = 0
@@ -172,8 +171,6 @@ for j in (list_subfolders_with_paths):
     dataset.append(listt)
     # if j == "dataset\pins_Katherine Langford":
     #     break
-    if count == 4:
-        break
 # dataset = np.array(dataset)
     
 # print(len(dataset[0]))
