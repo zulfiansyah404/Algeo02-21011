@@ -42,7 +42,7 @@ def nilai_tengah(matrix, listt,dataset):
         temp = ((subtract_matrix(dataset[i],matrix)))
         # temp = (temp.astype(np.uint8))
         listt.append(temp)
-    return abs(np.array(listt))
+    return ((listt))
 
 def get_covarian(list_selisih):
     # covarian = [[1 for j in range(256)] for i in range(256)]
@@ -81,7 +81,7 @@ def getEigenValues(A):
     Ak = np.copy(A)
     n = A.shape[0]
     QQ = np.eye(n)
-    for k in range(1):
+    for k in range(5):
         s = Ak.item(n - 1, n - 1)
         smult = s * np.eye(n)
         Q, R = getQR(np.subtract(Ak, smult))
@@ -97,6 +97,17 @@ def getEigenVal(matrix,listt):
                 listt.append(matrix[i][j])
                 break
     return listt
+
+def getNormMat(matrix):
+    listt = createzero(len(matrix))
+    sum = 0
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            sum+= matrix[i][j]**2
+        
+    return sum**0.5
+    
+    
 
 
 # m1 = [[2,0,1],[1,2,0],[0,2,4]]
@@ -139,6 +150,9 @@ def getEigenVal(matrix,listt):
 
 # path = 'dataset/pins_Zendaya'
 start = time.time()
+newIMG = cv2.imread('dataset\pins_gal gadot\gal gadot10_1660.jpg', 0)
+newIMG = cv2.resize(newIMG, (256,256), interpolation = cv2.INTER_AREA)
+
 count = 0
 dataset = []
 list_subfolders_with_paths = [f.path for f in os.scandir('dataset') if f.is_dir()]
@@ -151,8 +165,10 @@ for j in (list_subfolders_with_paths):
         listt.append(resized)
     count += 1
     dataset.append(listt)
-    # if count == 3:
+    # if j == "dataset\pins_Katherine Langford":
     #     break
+    if count == 40:
+        break
 # dataset = np.array(dataset)
     
 # print(len(dataset[0]))
@@ -161,11 +177,13 @@ for j in (list_subfolders_with_paths):
 #rata-rata
 eigenface = []
 eigen_vector_list = []
+mean_list = []
 
 for data in range(len(dataset)):
     print(data + 1)     
     matrix = avg_matrix(dataset[data])
-    # matrix = matrix.astype(np.uint8)
+    matrix = matrix.astype(np.uint8)
+    mean_list.append(matrix)
     # displayMat(matrix)
     # cv2.imshow('avg image',matrix)
     # cv2.waitKey(0)
@@ -255,18 +273,21 @@ for data in range(len(dataset)):
 # for i in range(5):
 #     cv2.imshow('Original image'+str(i),listt[i])
 
-# cv2.waitKey(0)
+# cv2.waitKey(0)    
 # cv2.destroyAllWindows()
 
 
-newIMG = cv2.imread('ronaldo.jpg', 0)
-newIMG = cv2.resize(newIMG, (256,256), interpolation = cv2.INTER_AREA)
+# newIMG = cv2.imread('gal-gadot.jpeg', 0)
+# newIMG = cv2.resize(newIMG, (256,256), interpolation = cv2.INTER_AREA)
 
-testIMG = subtract_matrix(newIMG, matrix)
+
+
 
 hasil_euclidian = []
 list_min = []
 for vector in range(len(eigen_vector_list)):
+    print(vector+1)
+    testIMG = subtract_matrix(newIMG, mean_list[vector])
     newtst = multiply_matrix(eigen_vector_list[vector], testIMG)
     min = 0
     idx_min = 0
