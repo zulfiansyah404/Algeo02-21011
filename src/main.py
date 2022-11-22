@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 import os
 from tkinter import filedialog
 import time
-from tess import answer
+from FaceRecognition import answer
 import cv2
 from camera import capture_image
 
