@@ -1,5 +1,5 @@
 # Algeo02-21011
-Repositori Tugas Besar Kelompok MONOPOLY
+Repositori Tugas Besar Aljabar Linear dan Geometri IF2023 Kelompok MONOPOLY
 
 
 > Live demo [_here_](https://www.example.com). <!-- If you have the project hosted somewhere, include the link here. -->
@@ -14,19 +14,16 @@ Repositori Tugas Besar Kelompok MONOPOLY
 * [Project Status](#project-status)
 * [Room for Improvement](#room-for-improvement)
 * [Acknowledgements](#acknowledgements)
-* [Contact](#contact)
-<!-- * [License](#license) -->
 
 
 ## General Information
 Pengenalan wajah (Face Recognition) adalah teknologi biometrik yang bisa dipakai untuk mengidentifikasi wajah seseorang untuk berbagai kepentingan khususnya keamanan. Program pengenalan wajah melibatkan kumpulan citra wajah yang sudah disimpan pada database lalu berdasarkan kumpulan citra wajah tersebut, program dapat mempelajari bentuk wajah lalu mencocokkan antara kumpulan citra wajah yang sudah dipelajari dengan citra yang akan diidentifikasi.
-<!-- You don't have to answer all the questions - just the ones relevant to your project. -->
 
 
 ## Technologies Used
 - NumPy - version 1.23.4
 - OpenCV - version 4.6.0
-- CustomTkinter - version ......
+- CustomTkinter - version 4.6.3
 
 
 ## Features
@@ -43,8 +40,11 @@ List the ready features here:
 
 ## Setup
 1. Clone this repository.
-2. Make sure that you have installed all the dependencies(python, numpy, cv2).
-3. Run the app.
+2. Make sure that you have installed all the dependencies(python, numpy, cv2, Pillow).
+3. `pip install numpy`
+4. `pip install opencv-python`
+5. `pip install Pillow`
+6. Run the app.
 
 
 
@@ -56,18 +56,12 @@ List the ready features here:
 5. Wait until the proccess finish
 6. You can see the result of the program
 
-How does one go about using it?
-Provide various use cases and code examples here.
-
-`write-your-code-here`
-
 
 ## Project Status
 Project is: _complete_
 
 
 ## Room for Improvement
-
 Room for improvement:
 - Add cache to the program
 - Add writed file after the program finish to reduce the time execution
@@ -76,13 +70,3 @@ Room for improvement:
 ## Acknowledgements
 - Many thanks to Rilla Mandala that teach us how to implement this project
 
-
-## Contact
-Created by [@flynerdpl](https://www.flynerd.pl/) - feel free to contact me!
-
-
-<!-- Optional -->
-<!-- ## License -->
-<!-- This project is open source and available under the [... License](). -->
-
-<!-- You don't have to include all sections - just the one's relevant to your project -->
