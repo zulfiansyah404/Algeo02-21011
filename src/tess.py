@@ -95,7 +95,7 @@ def getEigenValues(A):
     Ak = np.copy(A)
     n = A.shape[0]
     QQ = np.eye(n)
-    for k in range(2):
+    for k in range(1):
         s = Ak.item(n - 1, n - 1)
         smult = s * np.eye(n)
         Q, R = getQR(np.subtract(Ak, smult))
@@ -184,8 +184,8 @@ def answer(datasets,filename):
         nama_folder.append(j)
         # if j == "dataset\pins_Katherine Langford":
         #     break
-        if count == 4:
-            break
+        # if count == 4:
+        #     break
     # dataset = np.array(dataset)
         
     # # print(len(dataset[0]))

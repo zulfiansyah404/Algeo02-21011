@@ -8,6 +8,7 @@ from tkinter import filedialog
 import time
 from tess import answer
 import cv2
+from camera import capture_image
 
 start = time.time()
 
@@ -72,6 +73,12 @@ class App(customtkinter.CTk):
         command=self.process)
         self.button_3.grid(row=4, column=0, pady=10, padx=10)
 
+        self.button_4 = customtkinter.CTkButton(master=self.frame_left,
+        text="Camera", compound="folder",
+        command=self.open_camera)
+        self.button_4.grid(row=5, column=0, pady=10, padx=10)
+
+
         self.label_mode = customtkinter.CTkLabel(master=self.frame_left, text="AppearanceMode:")
         self.label_mode.grid(row=9, column=0, pady=0, padx=20, sticky="w")
         self.optionmenu_1 = customtkinter.CTkOptionMenu(master=self.frame_left,
@@ -83,10 +90,37 @@ class App(customtkinter.CTk):
         # configure grid layout (1x1)
         self.frame_right.grid_rowconfigure(0, weight=1)
         self.frame_right.grid_columnconfigure(0, weight=1)
-        self.frame_picture = customtkinter.CTkFrame(master=self.frame_right, width=320, border_width=10, corner_radius=0) # font name and size in px
+
+        self.frame_info = customtkinter.CTkFrame(master=self.frame_right,
+        corner_radius=0, width=1000, fg_color=self.frame_right.fg_color)
+        self.frame_info.grid(row=0, column=0, sticky="nswe", pady=10, padx=10)
+        
+        
+        self.label_info_dataset = customtkinter.CTkLabel(master=self.frame_info,
+        text="Dataset: ", width=300 , anchor="center", corner_radius=5)
+        self.label_info_dataset.grid(row=0, column=0, sticky="w")
+        
+        self.label_location_dataset = customtkinter.CTkLabel(master=self.frame_info,
+        text=dataset, fg_color="#0c5174", width=300 , anchor="center", corner_radius=5)
+        self.label_location_dataset.grid(row=1, column=0, sticky="w", pady=10)
+
+        self.frame_info2 = customtkinter.CTkFrame(master=self.frame_right,
+        corner_radius=0, width=1000, fg_color=self.frame_right.fg_color)
+        self.frame_info2.grid(row=0, column=1, sticky="nswe", pady=10, padx=10)
+
+        self.label_info_image = customtkinter.CTkLabel(master=self.frame_info2,
+        text="Image: ", width=320 , anchor="center", corner_radius=5)
+        self.label_info_image.grid(row=0, column=0, sticky="w")
+
+        self.label_location_image = customtkinter.CTkLabel(master=self.frame_info2,
+        text=filename, fg_color="#0c5174", width=320 , anchor="center", corner_radius=5)
+        self.label_location_image.grid(row=1, column=0, sticky="w", pady=10)
+
+
+        self.frame_picture = customtkinter.CTkFrame(master=self.frame_right, width=320, height=200 ,border_width=10, corner_radius=0, border_color=self.frame_right.bg_color) # font name and size in px
         self.frame_picture.grid(row=1, column=0, sticky="nswe")
 
-        self.frame_dataset = customtkinter.CTkFrame(master=self.frame_right, width=320, border_width=10, corner_radius=0) # font name and size in px
+        self.frame_dataset = customtkinter.CTkFrame(master=self.frame_right, width=320, height=200, border_width=10, corner_radius=0, border_color=self.frame_right.bg_color) # font name and size in px
         self.frame_dataset.grid(row=1, column=1, sticky="nswe")
 
         
@@ -98,11 +132,11 @@ class App(customtkinter.CTk):
 
         # Buat label di frame picture
         self.label_image = customtkinter.CTkLabel(master=self.frame_picture,
-        text="Image", fg_color="#0c5174", width=300, height=30, corner_radius=5)
+        text="Image", fg_color="#0c5174", width=300, height=30)
         self.label_image.grid(row=0, column=0, sticky="nswe", pady=10, padx=10)
 
         self.label_dataset = customtkinter.CTkLabel(master=self.frame_dataset,
-        text="Result", fg_color="#0c5174", width=320, height=30 , corner_radius=5)
+        text="Result", fg_color="#0c5174", width=320, height=30)
         self.label_dataset.grid(row=0, column=0, sticky="nswe", pady=10, padx=10)
 
         # self.frame_image = customtkinter.CTkFrame(master=self.frame_picture, width=320, border_width=10) # font name and size in px 
@@ -137,6 +171,7 @@ class App(customtkinter.CTk):
         global execute_time
         global solve
         self.start_time = time.time()
+        print(dataset, filename)
         hasil = answer(dataset, filename)
         execute_time = time.time() - self.start_time
         print(execute_time)
@@ -151,23 +186,28 @@ class App(customtkinter.CTk):
         self.label_image2.grid(row=1, column=0, sticky="nswe", pady=50, padx=10)
 
         self.label_2 = customtkinter.CTkLabel(master=self,
-        text="Execution Time : \n" + str(execute_time),
+        text="Execution Time : \n" + str(execute_time) + "\nResult : \n" + str(self.function_similarity(hasil[2])) + "%",
         text_font=("Roboto Medium", -10))
         self.label_2.grid(row=0, column=2, sticky="nswe")
         
+        image = Image.open(filename).resize((256, 256))
+
+        self.photo = ImageTk.PhotoImage(image)
+
         self.label_image = customtkinter.CTkLabel(master=self.frame_picture,
-        image=self.photo2)
+        image=self.photo, width=256, height=256)
 
-        self.label_image.grid(row=1, column=0, sticky="nswe", pady=50, padx=10)
-
+        self.label_image.grid(row=1, column=0, sticky="nswe", pady=10, padx=10)
+    def function_similarity(self, similarity):
+        return (30000 - similarity) / 30000 * 100
+    
     def UploadActionfolder(self):
         global dataset
         temp = filedialog.askdirectory()
         print('Selected: ', temp)
         if (temp != dataset or temp != ""):
             dataset = temp
-            print("Dataset changed to: ", dataset)
-            self.update()
+            self.label_location_dataset.config(text=self.shortNameFile(dataset))
 
     def update(self):
         self.destroy()
@@ -180,15 +220,21 @@ class App(customtkinter.CTk):
         if (temp != filename or temp != ""):
             filename = temp
             # self.update()
-            image2 = Image.open("hasil.jpg").resize((256, 256))
+            image2 = Image.open(filename).resize((256, 256))
             self.photo2 = ImageTk.PhotoImage(image2)
 
             self.label_image = customtkinter.CTkLabel(master=self.frame_picture,
             image=self.photo2)
-
+            
             self.label_image.grid(row=1, column=0, sticky="nswe", pady=50, padx=10)
+            self.label_location_image.config(text=self.shortNameFile(filename))
 
-
+    def shortNameFile(self, name):
+        self.N = len(name)
+        for i in range(self.N-1, 0, -1):
+            if (name[i] == '/' or name[i] == '\\') :
+                return name[i+1:self.N]
+        return name
 
     def button_event(self):
         print("Button pressed")
@@ -196,6 +242,25 @@ class App(customtkinter.CTk):
         customtkinter.set_appearance_mode(new_appearance_mode)
     def on_closing(self, event=0):
         self.destroy()
+
+    def open_camera(self):
+        global filename
+        capture_image()
+        
+        image2 = Image.open("potret.jpg").resize((256, 256))
+        self.photo2 = ImageTk.PhotoImage(image2)
+        
+        filename = "potret.jpg"
+
+        self.label_image = customtkinter.CTkLabel(master=self.frame_picture,
+        image=self.photo2)
+        
+        self.label_image.grid(row=1, column=0, sticky="nswe", pady=50, padx=10)
+        self.label_location_image.config(text=self.shortNameFile(filename))
+
+        self.label_image.grid(row=1, column=0, sticky="nswe", pady=50, padx=10)
+        self.label_location_image.config(text=self.shortNameFile(filename))
+
 
 def refresh():
     print("sok2")
