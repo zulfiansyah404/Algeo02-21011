@@ -25,7 +25,7 @@ filename = ''
 hasil = np.array([[]])
 solve = False
 global execute_time
-execute_time = -1
+execute_time = ''
 class App(customtkinter.CTk):
     WIDTH = 1000
     HEIGHT = 520
@@ -83,26 +83,26 @@ class App(customtkinter.CTk):
         # configure grid layout (1x1)
         self.frame_right.grid_rowconfigure(0, weight=1)
         self.frame_right.grid_columnconfigure(0, weight=1)
-        self.frame_picture = customtkinter.CTkFrame(master=self.frame_right, width=320, border_width=10) # font name and size in px
+        self.frame_picture = customtkinter.CTkFrame(master=self.frame_right, width=320, border_width=10, corner_radius=0) # font name and size in px
         self.frame_picture.grid(row=1, column=0, sticky="nswe")
 
-        self.frame_dataset = customtkinter.CTkFrame(master=self.frame_right, width=320, border_width=10) # font name and size in px
+        self.frame_dataset = customtkinter.CTkFrame(master=self.frame_right, width=320, border_width=10, corner_radius=0) # font name and size in px
         self.frame_dataset.grid(row=1, column=1, sticky="nswe")
 
         
         self.label_2 = customtkinter.CTkLabel(master=self,
-        text=str(execute_time),
+        text="Execution Time : \n" + str(execute_time),
         text_font=("Roboto Medium", -10))
         self.label_2.grid(row=0, column=2, sticky="nswe")
 
 
         # Buat label di frame picture
         self.label_image = customtkinter.CTkLabel(master=self.frame_picture,
-        text="Image", fg_color="#0c5174", bg_color="black", width=300, height=30)
+        text="Image", fg_color="#0c5174", width=300, height=30, corner_radius=5)
         self.label_image.grid(row=0, column=0, sticky="nswe", pady=10, padx=10)
 
         self.label_dataset = customtkinter.CTkLabel(master=self.frame_dataset,
-        text="Result", fg_color="#0c5174", bg_color="black", width=320, height=30)
+        text="Result", fg_color="#0c5174", width=320, height=30 , corner_radius=5)
         self.label_dataset.grid(row=0, column=0, sticky="nswe", pady=10, padx=10)
 
         # self.frame_image = customtkinter.CTkFrame(master=self.frame_picture, width=320, border_width=10) # font name and size in px 
@@ -141,12 +141,24 @@ class App(customtkinter.CTk):
         execute_time = time.time() - self.start_time
         print(execute_time)
         solve = True
-        cv2.imwrite("hasil.jpg", hasil)
-        print("AKWOAKWOKA")
-        self.destroy()
-        print("CEK APAKAH DESTORY NYA MASALAH")
-        refresh()
-        print("CEK APAKAH REFRESH NYA MASALAH")
+        cv2.imwrite("hasil.jpg", hasil[0])
+        image2 = Image.open("hasil.jpg").resize((256, 256))
+        self.photo2 = ImageTk.PhotoImage(image2)
+
+        self.label_image2 = customtkinter.CTkLabel(master=self.frame_dataset,
+        image=self.photo2)
+
+        self.label_image2.grid(row=1, column=0, sticky="nswe", pady=50, padx=10)
+
+        self.label_2 = customtkinter.CTkLabel(master=self,
+        text="Execution Time : \n" + str(execute_time),
+        text_font=("Roboto Medium", -10))
+        self.label_2.grid(row=0, column=2, sticky="nswe")
+        
+        self.label_image = customtkinter.CTkLabel(master=self.frame_picture,
+        image=self.photo2)
+
+        self.label_image.grid(row=1, column=0, sticky="nswe", pady=50, padx=10)
 
     def UploadActionfolder(self):
         global dataset
@@ -167,7 +179,15 @@ class App(customtkinter.CTk):
         print('Selected: ', temp)
         if (temp != filename or temp != ""):
             filename = temp
-            self.update()
+            # self.update()
+            image2 = Image.open("hasil.jpg").resize((256, 256))
+            self.photo2 = ImageTk.PhotoImage(image2)
+
+            self.label_image = customtkinter.CTkLabel(master=self.frame_picture,
+            image=self.photo2)
+
+            self.label_image.grid(row=1, column=0, sticky="nswe", pady=50, padx=10)
+
 
 
     def button_event(self):

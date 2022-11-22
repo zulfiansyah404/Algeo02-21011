@@ -349,4 +349,10 @@ def answer(datasets,filename):
     # index = hasil_euclidian.index(minn)
     img = imagee[idx_min][final_min[1]]
 
-    return img
+    # return gambar, nama folder, serta kemiripan
+    return [img, nama_folder[idx_min], list_min[idx_min][0]]
+
+# ans = answer( "dataset", "dataset\pins_Adriana Lima\Adriana Lima8_196.jpg")
+# print(ans[0])
+# print(ans[1][13:])
+# print(ans[2])
