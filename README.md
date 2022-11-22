@@ -36,11 +36,6 @@ List the ready features here:
 - Dark mode
 
 
-## Screenshots
-![Example screenshot](./img/screenshot.png)
-<!-- If you have screenshots you'd like to share, include them here. -->
-
-
 ## Setup
 1. Clone this repository.
 2. Make sure that you have installed all the dependencies(python, numpy, cv2).
